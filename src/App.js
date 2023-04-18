@@ -3,6 +3,7 @@ import Home from "./user-pages/Home";
 import About from "./user-pages/About";
 import Product from "./user-pages/Product";
 import Contact from "./user-pages/Contact";
+import Cart from "./user-pages/Cart";
 
 import Login from "./admin-pages/Login";
 import ProductList from "./admin-pages/ProductList";
@@ -21,6 +22,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Product />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<Cart />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/productlist" element={<ProductList />} />

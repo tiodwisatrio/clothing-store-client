@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { FaCartPlus } from "react-icons/fa";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -80,6 +81,19 @@ const Navbar = () => {
                 }
               >
                 Contact
+              </NavLink>
+              <NavLink
+                to="/cart"
+                className={({ isActive }) =>
+                  isActive
+                    ? "font-semibold text-sm text-teal-700 hover:text-teal-900"
+                    : "text-slate-600 text-sm hover:text-slate-900"
+                }
+              >
+                <div className="flex flex-row items-center gap-x-1">
+                  <FaCartPlus className="text-lg" />
+                  <span>Cart</span>
+                </div>
               </NavLink>
               <button className="bg-teal-700 rounded text-sm text-white px-7 py-2 hover:bg-teal-900">
                 <Link to="/login">Login</Link>
