@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Navbar from "../components/Navbar";
@@ -91,17 +91,10 @@ const Login = () => {
               placeholder="password..."
               className="placeholder:text-[13px] text-[13px] px-2 py-2 rounded-sm text-teal-600 border focus:outline-none focus:border-teal-500 shadow-sm"
             />
-            <div className="flex flex-row items-center mt-4 gap-x-1 w-full cursor-pointer" onClick={handleShowPassword}>
-              {/* <span
-                onClick={handleShowPassword}
-                className={`${
-                  showPassword
-                    ? "bg-teal-500 focus:ring"
-                    : "bg-transparent focus:ring-0 border border-teal-600"
-                } w-3 h-3 rounded-sm`}
-              ></span>
-              <p className="text-[12px] text-slate-500">show password</p> */}
-
+            <div
+              className="flex flex-row items-center mt-4 gap-x-1 w-full cursor-pointer"
+              onClick={handleShowPassword}
+            >
               <input
                 type="checkbox"
                 id="showPasswordCheckbox"
@@ -117,13 +110,6 @@ const Login = () => {
           >
             Login
           </button>
-
-          {/* <div className="flex items-center justify-center gap-x-1">
-            <span className="text-center text-sm">Belum punya akun? </span>
-            <Link to={"/register"}>
-              <p className="text-sm text-teal-600 font-medium">Register</p>
-            </Link>
-          </div> */}
         </form>
       </div>
     </>
