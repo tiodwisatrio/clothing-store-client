@@ -8,6 +8,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -48,22 +49,9 @@ const Login = () => {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post("/login", { username, password });
-  //     const token = response.data.token;
-  //     // simpan token di local storage
-  //     localStorage.setItem("token", token);
-  //     // redirect ke halaman lain setelah berhasil login
-  //     // history.push("/dashboard");
-  //     navigate("/productlist")
-  //   } catch (error) {
-  //     alert("Invalid credentials");
-  //   }
-  // };
-
-  
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <>
@@ -98,11 +86,30 @@ const Login = () => {
               value={password}
               // onChange={handleChange}
               onChange={(e) => setpassword(e.target.value)}
-              type="password"
+              type={showPassword ? "text" : "password"}
               autoComplete="off"
               placeholder="password..."
               className="placeholder:text-[13px] text-[13px] px-2 py-2 rounded-sm text-teal-600 border focus:outline-none focus:border-teal-500 shadow-sm"
             />
+            <div className="flex flex-row items-center mt-4 gap-x-1 w-full cursor-pointer" onClick={handleShowPassword}>
+              {/* <span
+                onClick={handleShowPassword}
+                className={`${
+                  showPassword
+                    ? "bg-teal-500 focus:ring"
+                    : "bg-transparent focus:ring-0 border border-teal-600"
+                } w-3 h-3 rounded-sm`}
+              ></span>
+              <p className="text-[12px] text-slate-500">show password</p> */}
+
+              <input
+                type="checkbox"
+                id="showPasswordCheckbox"
+                checked={showPassword}
+                className={`${showPassword ? "bg-teal-500" : "bg-transparent"}`}
+              />
+              <span className="text-[12px] text-slate-500">show password</span>
+            </div>
           </div>
           <button
             onClick={handleSubmit}
