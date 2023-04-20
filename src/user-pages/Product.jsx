@@ -3,10 +3,145 @@ import axios from "axios";
 import toRupiah from "@develoka/angka-rupiah-js";
 import Navbar from "../components/Navbar";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaCartPlus } from "react-icons/fa";
 
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState("");
+  const [cart, setCart] = useState([]);
+
+  // check if user doing reload page, the cart will be saved
+  useEffect(() => {
+    const checkCart = localStorage.getItem("cart");
+    if (checkCart) {
+      setCart(JSON.parse(checkCart));
+    }
+  }, []);
+
+  // Make function that get product id and save the product to cart table in database and save to local storage
+  const addCart = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/products/${id}`);
+      const product = response.data;
+      const data = {
+        id_product: product.id,
+        quantity: 1,
+      };
+      await axios.post(`http://localhost:5000/cart`, data);
+      setCart([...cart, product]);
+      alert("Product added to cart");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const addToCart = async (id) => {
+    try {
+      //     // make function that if user doing reload page, the cart will be saved
+      const checkCart = localStorage.getItem("cart");
+      if (checkCart) {
+        setCart(JSON.parse(checkCart));
+      }
+      const response = await axios.get(`http://localhost:5000/products/${id}`);
+      const product = response.data;
+
+      // Check if product add 2 or 3 times, multiply quantity and price
+      const checkProduct = cart.find((product) => product.id === id);
+      if (checkProduct) {
+        const newCart = cart.map((product) => {
+          const quantity = 1;
+          if (product.id === id) {
+            return {
+              ...product,
+              // quantity: quantity + quantity,
+              // Making quantity increment by 1 and more
+              quantity: quantity + 1,
+              price: product.price + product.price,
+            };
+          }
+          return product;
+        });
+        setCart(newCart);
+        return;
+      }
+
+      setCart([...cart, product]);
+      console.log(cart);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // const deleteFromCart = (id) => {
+  //   try {
+  //     const newCart = cart.filter((product) => product.id !== id);
+  //     setCart(newCart);
+  //   } catch (error) {}
+  // };
+
+  //! Masih salah di sini
+  const handlePlusButton = (id) => {
+    try {
+      const newCart = cart.map((product) => {
+        if (product.id === id) {
+          return {
+            ...product,
+            quantity: product.quantity + 1,
+            price: product.price + product.price,
+          };
+        }
+        return product;
+      });
+      setCart(newCart);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //! Masih salah di sini!
+  const handleMinusButton = (id) => {
+    const newCart = cart.map((product) => {
+      if (product.id === id && product.quantity > 1 && product.price > 1) {
+        return {
+          ...product,
+          price: product.price - product.price,
+          quantity: product.quantity - 1,
+        };
+      } else if (product.id === id && product.quantity === 1) {
+        return {
+          ...product,
+          price: product.price,
+          quantity: product.quantity,
+        };
+      }
+      return product;
+    });
+    setCart(newCart);
+  };
+
+  // const handleMinusButton = (id) => {
+  //   try {
+  //     const newCart = cart.map((product) => {
+  //       if (product.id === id && product.quantity > 1) {
+  //         return {
+  //           ...product,
+  //           quantity: product.quantity - 1,
+  //           price: product.price - product.price,
+  //         };
+  //       } else if (product.id === id && product.quantity === 1) {
+  //         return {
+  //           ...product,
+  //           quantity: product.quantity,
+  //           price: product.price
+  //         };
+  //       }
+  //       return product;
+  //     });
+  //     setCart(newCart);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
 
   const sendProductToWhatsAppById = async (id) => {
     const response = await axios.get(`http://localhost:5000/products/${id}`);
@@ -47,6 +182,39 @@ const Product = () => {
   return (
     <div>
       <Navbar />
+      <div className="bg-white shadow-lg rounded w-full p-4 flex flex-col justify-end">
+        <h2 className="text-xl font-bold mt-10">Cart</h2>
+        <div className="list-disc list-inside">
+          {cart.map((product) => (
+            <div key={product.id} className="flex flex-row items-center gap-2">
+              <img
+                src={product.url}
+                alt="images"
+                className="w-20 h-auto object-cover"
+              />
+              <div className="flex flex-col justify-center">
+                <p>Product Name : {product.name}</p>
+                <h2>Price : {convertToRupiah(product.price)}</h2>
+                <div>
+                  <button
+                    onClick={() => handleMinusButton(product.id)}
+                    className="bg-red-500 px-2 py-1 rounded text-white"
+                  >
+                    -
+                  </button>
+                  <h1>{product.quantity}</h1>
+                  <button
+                    onClick={() => handlePlusButton(product.id)}
+                    className="bg-teal-600 px-2 py-1 rounded text-white"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
       <div className="container">
         <div className="header mb-10 mt-5">
           <h1
@@ -124,12 +292,19 @@ const Product = () => {
                 {/* card action */}
                 <div className="card-action flex flex-row gap-x-3 text-center w-full h-[9] justify-between px-3 text-white text-sm mt-4">
                   {/* <BuyNowButton /> */}
-                  <div className="flex justify-center w-full">
+                  <div className="flex items-center justify-between w-full gap-x-2 h-full">
                     <button
                       onClick={() => sendProductToWhatsAppById(product.id)}
-                      className="bg-teal-700 rounded px-8 py-3 font-medium w-full"
+                      className="bg-teal-700 rounded font-medium w-3/4 py-3"
                     >
                       Beli Sekarang
+                    </button>
+                    <button
+                      onClick={() => addToCart(product.id)}
+                      // onClick={() => saveProductToCart(product.id)}
+                      className="bg-orange-600 rounded font-medium w-1/4 py-4 text-[13px] flex items-center justify-center"
+                    >
+                      <FaCartPlus className="w-16" />
                     </button>
                   </div>
                 </div>
