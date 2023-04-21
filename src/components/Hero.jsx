@@ -16,7 +16,7 @@ const Hero = () => {
   return (
     <>
       <div className="w-full  rounded text-white grid grid-cols-1 md:grid-cols-2 mt-6 px-4 py-4">
-        <div className="">
+        <div className="mt-10">
           <h1
             className="text-slate-900 text-3xl md:text-5xl p-3 leading-tight w-full font-semibold"
             data-aos="fade-right"

@@ -18,8 +18,8 @@ const About = () => {
     <div>
       <Navbar />
       <>
-        <div className="w-full  rounded text-white flex flex-col-reverse md:flex-row p-4">
-          <div className="w-[100%] md:w-[50%]">
+        <div className="w-full  rounded text-white flex flex-col-reverse md:flex-row p-4 mt-10">
+          <div className="w-[100%] md:w-[50%] mt-5">
             <h1
               className="text-slate-900 text-[16px] p-3  w-full font-medium -mb-4 opacity-60"
               data-aos="fade"
