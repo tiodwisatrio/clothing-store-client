@@ -9,6 +9,7 @@ const Product = () => {
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState([]);
+  const [quantity, setQuantity] = useState(1);
 
   // check if user doing reload page, the cart will be saved
   useEffect(() => {
@@ -19,58 +20,71 @@ const Product = () => {
   }, []);
 
   // Make function that get product id and save the product to cart table in database and save to local storage
-  const addCart = async (id) => {
-    try {
-      const response = await axios.get(`http://localhost:5000/products/${id}`);
-      const product = response.data;
-      const data = {
-        id_product: product.id,
-        quantity: 1,
-      };
-      await axios.post(`http://localhost:5000/cart`, data);
-      setCart([...cart, product]);
-      alert("Product added to cart");
-    } catch (error) {
-      console.log(error.message);
+  // const addCart = async (id) => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:5000/products/${id}`);
+  //     const product = response.data;
+  //     const data = {
+  //       id_product: product.id,
+  //       quantity: 1,
+  //     };
+  //     await axios.post(`http://localhost:5000/cart`, data);
+  //     setCart([...cart, product]);
+  //     alert("Product added to cart");
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+  const addToCart = (id) => {
+    const { cart, products } = this.state;
+    const existingItem = cart.find((item) => item.id === id);
+    const product = products.find((item) => item.id === id);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
     }
+
+    this.setState({ cart });
   };
+  // const addToCart = async (id) => {
+  //   try {
+  //         // make function that if user doing reload page, the cart will be saved
+  //     const checkCart = localStorage.getItem("cart");
+  //     if (checkCart) {
+  //       setCart(JSON.parse(checkCart));
+  //     }
+  //     const response = await axios.get(`http://localhost:5000/products/${id}`);
+  //     const product = response.data;
 
-  const addToCart = async (id) => {
-    try {
-      //     // make function that if user doing reload page, the cart will be saved
-      const checkCart = localStorage.getItem("cart");
-      if (checkCart) {
-        setCart(JSON.parse(checkCart));
-      }
-      const response = await axios.get(`http://localhost:5000/products/${id}`);
-      const product = response.data;
+  //     Check if product add 2 or 3 times, multiply quantity and price
+  //     const checkProduct = cart.find((product) => product.id === id);
+  //     if (checkProduct) {
+  //       const newCart = cart.map((product) => {
+  //         const quantity = 1;
+  //         if (product.id === id) {
+  //           return {
+  //             ...product,
+  //             quantity: quantity + quantity,
+  //             Making quantity increment by 1 and more
+  //             quantity: quantity + 1,
+  //             price: product.price + product.price,
+  //           };
+  //         }
+  //         return product;
+  //       });
+  //       setCart(newCart);
+  //       return;
+  //     }
 
-      // Check if product add 2 or 3 times, multiply quantity and price
-      const checkProduct = cart.find((product) => product.id === id);
-      if (checkProduct) {
-        const newCart = cart.map((product) => {
-          const quantity = 1;
-          if (product.id === id) {
-            return {
-              ...product,
-              // quantity: quantity + quantity,
-              // Making quantity increment by 1 and more
-              quantity: quantity + 1,
-              price: product.price + product.price,
-            };
-          }
-          return product;
-        });
-        setCart(newCart);
-        return;
-      }
-
-      setCart([...cart, product]);
-      console.log(cart);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  //     setCart([...cart, product]);
+  //     console.log(cart);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
 
   // const deleteFromCart = (id) => {
   //   try {
@@ -79,45 +93,88 @@ const Product = () => {
   //   } catch (error) {}
   // };
 
-  //! Masih salah di sini
+  //TODO Sesuaikan harga dengan quantity nya!
   const handlePlusButton = (id) => {
-    try {
-      const newCart = cart.map((product) => {
-        if (product.id === id) {
-          return {
-            ...product,
-            quantity: product.quantity + 1,
-            price: product.price + product.price,
-          };
-        }
-        return product;
-      });
-      setCart(newCart);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  //! Masih salah di sini!
-  const handleMinusButton = (id) => {
     const newCart = cart.map((product) => {
-      if (product.id === id && product.quantity > 1 && product.price > 1) {
-        return {
-          ...product,
-          price: product.price - product.price,
-          quantity: product.quantity - 1,
-        };
-      } else if (product.id === id && product.quantity === 1) {
-        return {
-          ...product,
-          price: product.price,
-          quantity: product.quantity,
-        };
+      if (product.id === id) {
+        setQuantity(quantity + 1);
+
+        // return {
+        //   ...product,
+        //   price: product.price + product.price,
+        //   quantity: product.quantity + 1,
+        // };
       }
       return product;
     });
     setCart(newCart);
   };
+
+  // const handleMinusButton = (id) => {
+  //   const newCart = cart.map((product) => {
+  //     if (product.id === id && product.quantity === 1) {
+  //       setQuantity(1);
+  //     }
+
+  //     if (product.id === id) {
+  //       setQuantity(quantity - 1);
+  //     }
+  //     return product;
+  //   });
+
+  //   setCart(newCart);
+  // };
+
+  // const handleMinusButton = (id) => {
+  //   const newCart = cart.map((product) => {
+  //     if (product.id === id && product.quantity > 1) {
+  //       setQuantity(quantity - 1);
+  //     } else if (product.id === id && product.quantity === 1) {
+  //       setQuantity(quantity);
+  //     }
+  //     return product;
+  //   });
+  //   setCart(newCart);
+  // };
+
+  // const handlePlusButton = (id) => {
+  //   try {
+  //     const newCart = cart.map((product) => {
+  //       if (product.id === id) {
+  //         return {
+  //           ...product,
+  //           quantity: product.quantity + 1,
+  //           price: product.price + product.price,
+  //         };
+  //       }
+  //       return product;
+  //     });
+  //     setCart(newCart);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+  //! Masih salah di sini!
+  // const handleMinusButton = (id) => {
+  //   const newCart = cart.map((product) => {
+  //     if (product.id === id && product.quantity > 1 && product.price > 1) {
+  //       return {
+  //         ...product,
+  //         price: product.price - product.price,
+  //         quantity: product.quantity - 1,
+  //       };
+  //     } else if (product.id === id && product.quantity === 1) {
+  //       return {
+  //         ...product,
+  //         price: product.price,
+  //         quantity: product.quantity,
+  //       };
+  //     }
+  //     return product;
+  //   });
+  //   setCart(newCart);
+  // };
 
   // const handleMinusButton = (id) => {
   //   try {
@@ -182,30 +239,42 @@ const Product = () => {
   return (
     <div>
       <Navbar />
-      <div className="bg-white shadow-lg rounded w-full p-4 flex flex-col justify-end">
+      {/* <div className="bg-white shadow-lg rounded w-full p-4 flex flex-col justify-end">
         <h2 className="text-xl font-bold mt-10">Cart</h2>
         <div className="list-disc list-inside">
           {cart.map((product) => (
-            <div key={product.id} className="flex flex-row items-center gap-2">
+            <div
+              key={product.id}
+              className="flex flex-row items-center gap-2 my-5"
+            >
               <img
                 src={product.url}
                 alt="images"
                 className="w-20 h-auto object-cover"
               />
               <div className="flex flex-col justify-center">
-                <p>Product Name : {product.name}</p>
-                <h2>Price : {convertToRupiah(product.price)}</h2>
-                <div>
+                <p className="text-sm">
+                  Product Name :{" "}
+                  <span className="font-semibold">{product.name}</span>
+                </p>
+                <h2 className="text-sm">
+                  Price :{" "}
+                  <span className="font-semibold">
+                    {convertToRupiah(product.price)}
+                  </span>
+                </h2>
+                <div className="flex flex-row items-center mt-4  justify-between w-24">
                   <button
-                    onClick={() => handleMinusButton(product.id)}
-                    className="bg-red-500 px-2 py-1 rounded text-white"
+                    // onClick={() => handleMinusButton(product.id)}
+                    {...(quantity === 1 && { disabled: true })}
+                    className="bg-red-500 py-1 px-2 text-sm rounded font-bold text-white"
                   >
                     -
                   </button>
-                  <h1>{product.quantity}</h1>
+                  <h1>{quantity}</h1>
                   <button
-                    onClick={() => handlePlusButton(product.id)}
-                    className="bg-teal-600 px-2 py-1 rounded text-white"
+                    // onClick={() => handlePlusButton(product.id)}
+                    className="bg-teal-600 py-1 px-2 text-sm rounded font-bold text-white"
                   >
                     +
                   </button>
@@ -214,7 +283,7 @@ const Product = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
       <div className="container">
         <div className="header mb-10 mt-5">
           <h1
