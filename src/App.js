@@ -11,6 +11,7 @@ import AddProduct from "./admin-pages/AddProduct";
 import EditProduct from "./admin-pages/EditProduct";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Product />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/cart" element={<Cart />} />
+          {/* <Route path="/cart" element={<Cart />} /> */}
 
           <Route path="/login" element={<Login />} />
           <Route path="/productlist" element={<ProductList />} />

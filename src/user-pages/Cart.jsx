@@ -1,39 +1,48 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
-import axios from "axios";
+import React, { useState } from "react";
 
 const Cart = () => {
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [items, setItems] = useState([]);
 
-  const getProducts = async () => {
-    const response = await axios.get(`http://localhost:5000/products`);
-    setProducts(response.data);
+  // Function to add an item to the cart
+  const addToCart = (item) => {
+    setItems([...items, item]);
   };
 
-  useEffect(() => {
-    getProducts();
-  }, []);
+  // Function to remove an item from the cart
+  const removeFromCart = (item) => {
+    const updatedItems = items.filter((i) => i.id !== item.id);
+    setItems(updatedItems);
+  };
+
+  // Render the cart items
+  const renderCartItems = () => {
+    if (items.length === 0) {
+      return <p>Your cart is empty.</p>;
+    }
+
+    return (
+      <ul>
+        {items.map((item) => (
+          <li key={item.id}>
+            {item.name} -{" "}
+            <button onClick={() => removeFromCart(item)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
-    <>
-      <Navbar />
-      <div className="flex flex-col md:flex-row w-full mt-4 h-72">
-        <div className="product-input bg-red-500 w-3/4">
-          <h2 className="text-xl font-bold mt-10">Cart</h2>
-          <ul className="list-disc list-inside">
-            {cart.map((product) => (
-              <li key={product.id}>
-                {/* {product.name} - ${product.price.toFixed(2)} */}
-                {product.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="detail-checkout bg-teal-600 w-1/4">asda</div>
-      </div>
-    </>
+    <div>
+      <h2>Cart</h2>
+      {renderCartItems()}
+      <button onClick={() => addToCart({ id: 1, name: "Item 1" })}>
+        Add Item 1
+      </button>
+      <button onClick={() => addToCart({ id: 2, name: "Item 2" })}>
+        Add Item 2
+      </button>
+    </div>
   );
 };
 
