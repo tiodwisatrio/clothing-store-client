@@ -58,7 +58,7 @@ const Product = () => {
         <div className=" h-[60vh]">
           {items.map((item, index) => {
             return (
-              <div key={index} className="">
+              <div key={index}>
                 <div className="flex flex-row items-center gap-x-1">
                   <img src={item.url} alt={item.name} className="w-24" />
                   <div className="flex flex-col gap-y-1">
