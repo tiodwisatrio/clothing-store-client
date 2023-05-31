@@ -51,13 +51,13 @@ const Hero = () => {
             data-aos-delay="900"
           >
             <Link to="/products">
-              <button className="primary-btn w-full md:w-[200px] h-12 bg-teal-600 text-white font-medium rounded">
+              <button className="primary-btn w-full md:w-[200px] h-12 bg-teal-700 text-white font-medium rounded transition-all duration-200 hover:bg-teal-800">
                 Buy Now
               </button>
             </Link>
             <Link to="/contact">
-              <button className="secondary-btn w-full md:w-[200px] h-12 border-6 border-teal-600 text-teal-600 rounded -mt-3 md:mt-0">
-                Hubungi Kami
+              <button className="secondary-btn w-full md:w-[200px] h-12 text-teal-600 rounded -mt-3 md:mt-0 transition-all duration-200 hover:border-2 border-teal-600">
+                Contact Us
               </button>
             </Link>
           </div>

@@ -119,7 +119,9 @@ const Contact = () => {
               />
             </div>
             <div className="p-3 mt-4">
-              <button className="w-full bg-teal-600 rounded py-3">Send</button>
+              <button className="w-full bg-teal-700 rounded py-3 transition-all duration-600 hover:bg-teal-800">
+                Send
+              </button>
             </div>
           </form>
           <div className="lg:-translate-y-7 sm:mt-10">

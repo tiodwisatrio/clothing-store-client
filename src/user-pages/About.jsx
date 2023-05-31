@@ -61,7 +61,7 @@ const About = () => {
               data-aos-duration="300"
               data-aos-delay="900"
             >
-              <button className="w-full primary-btn h-12 bg-teal-600 text-white font-medium rounded">
+              <button className="w-full primary-btn h-12 bg-teal-700 text-white font-medium rounded transition-all duration-200 hover:bg-teal-800">
                 <Link to="/contact">Contact Us</Link>
               </button>
             </div>

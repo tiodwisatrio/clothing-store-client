@@ -4,12 +4,12 @@ import toRupiah from "@develoka/angka-rupiah-js";
 import Navbar from "../components/Navbar";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaCartPlus } from "react-icons/fa";
-import Cart from "./Cart";
+import Lottie from "react-lottie";
+import LottieCart from "../lottie/lottie-cart.json";
 
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState("");
-  const [carts, setCarts] = useState([]);
 
   console.log(products);
 
@@ -32,62 +32,62 @@ const Product = () => {
     }
   };
 
-  // Function to remove an item from the cart
-  const removeFromCart = (item) => {
-    const updatedItems = items.filter((i) => i.id !== item.id);
-    setItems(updatedItems);
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: LottieCart,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
+
+  // Function to remove an item from the cart
+  // const removeFromCart = (item) => {
+  //   const updatedItems = items.filter((i) => i.id !== item.id);
+  //   setItems(updatedItems);
+  // };
 
   // Render the cart items
   const renderCartItems = () => {
     if (items.length === 0) {
-      return <p>Your cart is empty.</p>;
+      return <Lottie options={defaultOptions} height={200} width={200} />;
     }
 
     return (
-      <div className="w-full h-3/4 flex flex-col gap-y-4">
-        {items.map((item, index) => {
-          return (
-            <div key={index}>
-              <div className="flex flex-row items-center gap-x-1">
-                <img src={item.url} alt={item.name} className="w-24" />
-                <div className="flex flex-col gap-y-1">
-                  <p className="text-[12px] opacity-90">{item.name}</p>
-                  <h4 className="text-[18px] text-teal-800 font-semibold">
-                    {item.price}
-                  </h4>
-                  <div className="flex flex-row w-20 items-center justify-between mt-1">
-                    <button
-                      onClick={() => decreaseProductQuantity(item.id)}
-                      className="bg-rose-500 px-2 py-[1px] text-white rounded"
-                    >
-                      -
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button
-                      onClick={() => increaseProductQuantity(item.id)}
-                      className="bg-teal-700 px-2 py-[1px] text-white rounded"
-                    >
-                      +
-                    </button>
+      <div className="w-full flex flex-col gap-y-4 ">
+        <div className=" h-[60vh]">
+          {items.map((item, index) => {
+            return (
+              <div key={index} className="">
+                <div className="flex flex-row items-center gap-x-1">
+                  <img src={item.url} alt={item.name} className="w-24" />
+                  <div className="flex flex-col gap-y-1">
+                    <p className="text-[12px] opacity-90">{item.name}</p>
+                    <h4 className="text-[15px] text-teal-800 font-semibold">
+                      {convertToRupiah(item.price)}
+                    </h4>
+                    <div className="flex flex-row w-20 items-center justify-between mt-1">
+                      <button
+                        onClick={() => decreaseProductQuantity(item.id)}
+                        className="bg-rose-500 px-2 py-[1px] text-white rounded"
+                      >
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        onClick={() => increaseProductQuantity(item.id)}
+                        className="bg-teal-700 px-2 py-[1px] text-white rounded"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
-                {/* <div className="ml-4">
-                  <button className="bg-red-700 px-2 py-2 rounded">🗑️</button>
-                </div> */}
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-      // <ul>
-      //   {items.map((item) => (
-      //     <li key={item.id}>
-      //       {item.name} -{" "}
-      //       <button onClick={() => removeFromCart(item)}>Remove</button>
-      //     </li>
-      //   ))}
-      // </ul>
     );
   };
 
@@ -164,6 +164,18 @@ const Product = () => {
     getProducts();
   }, []);
 
+  const handleCheckout = () => {
+    const totalPrice = calculateTotalPrice();
+    const message = `Hi saya mau membeli product di bawah ini : \n\n${items.map(
+      (item) => `${item.name} - ${item.quantity} pcs\n`
+    )}\nTotal Price: $${totalPrice} \n\nTerima Kasih`;
+
+    const whatsappLink = `https://wa.me/6288972061745?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappLink, "_blank");
+  };
+
   return (
     <>
       <Navbar />
@@ -217,9 +229,9 @@ const Product = () => {
           data-aos-duration="300"
           data-aos-delay="900"
         >
-          <div className="flex flex-row w-full gap-x-3">
+          <div className="flex flex-col-reverse justify-center items-center md:items-start md:flex-row w-full gap-x-3">
             {/* productlist */}
-            <div className="flex flex-row w-3/4 flex-wrap gap-3 bg-white shadow-lg px-2 py-2 rounded">
+            <div className="flex flex-row w-3/4 flex-wrap gap-3  justify-center shadow-lg px-2 py-2 rounded">
               {filteredProducts.map((product) => (
                 <div key={product.id}>
                   <div className="card bg-white w-[250px] flex flex-col rounded-md  pb-4  shadow-2xl ">
@@ -252,14 +264,14 @@ const Product = () => {
                       <div className="flex items-center justify-between w-full gap-x-2 h-full">
                         <button
                           onClick={() => sendProductToWhatsAppById(product.id)}
-                          className="bg-teal-700 rounded font-medium w-3/4 py-3"
+                          className="bg-teal-700 rounded font-medium w-3/4 py-3 transition-all duration-200 hover:bg-teal-800"
                         >
                           Beli Sekarang
                         </button>
                         <button
                           onClick={() => addToCart(product)}
                           // onClick={() => saveProductToCart(product.id)}
-                          className="bg-orange-600 rounded font-medium w-1/4 py-4 text-[13px] flex items-center justify-center"
+                          className="bg-orange-600 rounded font-medium w-1/4 py-4 text-[13px] flex items-center justify-center transition-all duration-300 hover:bg-orange-700"
                         >
                           <FaCartPlus className="w-16" />
                         </button>
@@ -270,14 +282,20 @@ const Product = () => {
               ))}
             </div>
             {/* carts */}
-            <div className="w-1/4  shadow-xl rounded px-3 py3">
+            <div className="w-full md:w-1/4 h-full bg-white shadow-lg rounded px-3 py3">
               <h1>Carts</h1>
               {renderCartItems()}
-              <div className="flex flex-row justify-between mt-8">
-                <h1>Total Harga :</h1>
-                <h1>{calculateTotalPrice()}</h1>
+              <div className="flex flex-row justify-between mt-8 items-center">
+                <h1>Total Price :</h1>
+                {/* <h1>{calculateTotalPrice()}</h1> */}
+                <h1 className="font-semibold">
+                  {convertToRupiah(calculateTotalPrice())}
+                </h1>
               </div>
-              <button className="bg-teal-700 w-full py-4 rounded mt-5 text-white">
+              <button
+                onClick={handleCheckout}
+                className="bg-teal-700 w-full py-4 rounded mt-5 text-white mb-5 transition-all duration-200 hover:bg-teal-800"
+              >
                 Checkout
               </button>
             </div>
